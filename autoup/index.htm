@@ -19,7 +19,7 @@
 		</Style>
 		<title>АвтоАп Дизель форум</title>
 	</head>
-	<body style="margin:0px;">
+	<body style="margin:0px;" onload="LoadBody()">
 		<table border=0 width=100% height=100% colspan=0 rowspan=0>
 			<tr>
 				<td valign="top">
@@ -30,12 +30,15 @@
 			</tr>
 			<tr>
 				<td width=50>
-					<iframe onLoad="action(this)" src="http://disel.elcat.kg" id="ds" name="ds" width=100% height=100%></iframe>
+					<iframe onLoad="LoadForum(this)" src="http://disel.elcat.kg" id="ds" name="ds" width=100% height=100%></iframe>
 				</td>
 			</tr>
 		</table>
 		<script>
-			numUsr = 0;
+			var FunkNum = 5; //Переменная определения запуска функций
+			var CheckBody = 0; //Переменная определения полной загрузки приложения
+			
+			var numUsr = 0;
 			var w;
 			var bodyStr;
 			var interval;
@@ -47,136 +50,41 @@
 				return result;
 			}
 			
+			function LoadBody(){ //Срабатывает при загрузке програмы. Загружает данные из файла. Изменяет занчение флага CheckBody на 1
+				
+				CheckBody = 1;
+			}
+			
 			function enterToForum(){
 				document.getElementById('ds').contentWindow.document.getElementById('ips_username').value=users[0]; 
 				document.getElementById('ds').contentWindow.document.getElementById('ips_password').value=users[1];
 				document.getElementById('ds').contentWindow.document.getElementById('login').submit();
 			}
-			function action(ths){
-				if (document.getElementById('stopper').value == "Продолжить"){
-					return false;
-				}
-				w = document.getElementById('ds');
-				bodyStr = document.getElementById('ds').contentWindow.document.getElementsByTagName('body')[0].innerHTML;
-				
-				
-				document.getElementById('newNebo').value = document.getElementById('ds').contentWindow.document.getElementById('login').action;
-				inp = document.getElementById('ds').contentWindow.document.getElementsByTagName('input');
-				i = document.getElementById('ds').contentWindow.document.getElementsByTagName('input').length;
-				for (a=0;a<i;a++){
-					document.getElementById('newNebo').value += '\n';
-					document.getElementById('newNebo').value += inp[a].name+' - '+ inp[a].id+' - '+ inp[a].value;					
-				}
+			function LoadForum(ths){ //Срабатывает при загрузке фрейма с форумом. В зависимости от значения FunkNun вызывает нужную функцию
+				if (CheckBody == 0) {
+					setTimeout(LoadForum(ths), 5000);
+					alert (CheckBody);
+				}else{
 
-				var Links=false;
-				var chLink = "";
-				var chLink2 = "";
-				var chLink3 = "";
+					w = document.getElementById('ds');
+					bodyStr = document.getElementById('ds').contentWindow.document.getElementsByTagName('body')[0].innerHTML;
 				
-				//Проверка на вход на форум
-				chLink=searchStr('app=core&amp;module=global&amp;section=login');
-				if (chLink!=null && !Links){
-					document.getElementById('nameAct').innerHTML = "Найдена кнопка вход";
-					Links = 'http://disel.elcat.kg/?ips_username=cerberone&ips_password=280980';
-				}
 				
-				/*http://nebo.mobi/quests
-				http://nebo.mobi/quests?wicket:interface=:931:completedQuests:7:quest:getAwarLink::ILinkListener::
-				
-				//Проверка на взнос баксов в город
-				chLink=searchStr('lift\/wicket:interface\/:[0-9]{1,}:notifyPanel:guildDonateMessage:upgradeGuildStorageLink:link::ILinkListener::');
-				if (chLink!=null && !Links){
-					document.getElementById('nameAct').innerHTML = "Взнос 5 баксов в казну";
-					Links = 'http://nebo.mobi/home?'+chLink;
-				}
-								
-				//Проверка есть ли посетители в лифте
-				if ((searchStr('tb_lift.png')!=null)||(searchStr('tb_lift_vip.png')!=null)) {
-					document.getElementById('nameAct').innerHTML = "Люди в лифте";
-					Links = 'http://nebo.mobi/lift';
-				}
-				//Подъем посетителя в лифте
-				chLink=searchStr('lift\/wicket:interface\/:[0-9]{1,}:liftState:upLink::ILinkListener::');
-				if (chLink!=null && !Links){
-					document.getElementById('nameAct').innerHTML = "Подъем в лифте посетителя";
-					Links = 'http://nebo.mobi/'+chLink;
-				}
-				//Получение чаевых за подъем на лифте
-				chLink=searchStr('lift\/wicket:interface\/:[0-9]{1,}:liftState:tipsLink:link::ILinkListener::');
-				if (chLink!=null && !Links){
-					document.getElementById('nameAct').innerHTML = "Получение чаевых";
-					Links = 'http://nebo.mobi/'+chLink;
-				}
-				//Проверка наличия выручки, и ее сборка
-				chLink=searchStr('floors/0/5');
-				chLink2=searchStr('wicket:interface=:[0-9]{1,}:floors:0:floorPanel:state:action::ILinkListener::');
-				if (chLink!=null && !Links){
-					if (chLink2!=null){
-						document.getElementById('nameAct').innerHTML = "Сборка выручки";
-						Links = "http://nebo.mobi/?"+chLink2;
-					}else{
-						document.getElementById('nameAct').innerHTML = "Проверка выручки";
-						Links = "http://nebo.mobi/floors/0/5";
+					document.getElementById('newNebo').value = document.getElementById('ds').contentWindow.document.getElementById('login').action;
+					inp = document.getElementById('ds').contentWindow.document.getElementsByTagName('input');
+					i = document.getElementById('ds').contentWindow.document.getElementsByTagName('input').length;
+					for (a=0;a<i;a++){
+						document.getElementById('newNebo').value += '\n';
+						document.getElementById('newNebo').value += inp[a].name+' - '+ inp[a].id+' - '+ inp[a].value;					
 					}
-				}
-				//Проверка доставленных товаров, и выкладка
-				chLink=searchStr('floors/0/3');
-				chLink2=searchStr('wicket:interface=:[0-9]{1,}:floors:0:floorPanel:state:action::ILinkListener::');
-				if (chLink!=null && !Links){
-					if (chLink2!=null){
-						document.getElementById('nameAct').innerHTML = "Выкладка товара";
-						Links = "http://nebo.mobi/?"+chLink2;
-					}else{
-						document.getElementById('nameAct').innerHTML = "Проверка доставленного товара";
-						Links = "http://nebo.mobi/floors/0/3";
+
+					//Проверка на вход на форум
+					chLink=searchStr('app=core&amp;module=global&amp;section=login');
+					if (chLink!=null && !Links){
+						document.getElementById('nameAct').innerHTML = "Найдена кнопка вход";
+						Links = 'http://disel.elcat.kg/?ips_username=cerberone&ips_password=280980';
 					}
-				}
-				//Закупка товара
-				chLink=searchStr('floors/0/2');
-				chLink2=searchStr('floor/0/[0-9]{1,}');
-				chLink3=searchStr('t_empty_plus.png');
-				//window.document.getElementById('12').value = chLink2+'\r'+chLink3;
-				if (chLink!=null && !Links){
-					if (chLink3!=null && !Links){
-						document.getElementById('nameAct').innerHTML = "Проверка закупки";
-						Links = "http://nebo.mobi/"+chLink2;
-					}else{
-						document.getElementById('nameAct').innerHTML = "Проверка закупки";
-						Links = "http://nebo.mobi/floors/0/2";
-					}
-				}
-				chLink3=searchStr('wicket:interface=:[0-9]{1,}:floorPanel:product[ABC]:emptyState:action:link::ILinkListener::');
-				if(chLink3!=null && !Links){
-					document.getElementById('nameAct').innerHTML = "Закупка товара";
-					Links = "http://nebo.mobi/?"+chLink3;
-				}
-				//Загрузка страницы с нужным адресом*/
-				if (Links){
-					interval = 60000+Math.round(Math.random()*1000);
-					//ids = setTimeout(function(){w.src = Links;},interval);
-				}else{
-					if (numUsr == (users.length-1)) {
-						numUsr = 0;
-					}else{
-						numUsr++;
-					}
-					document.getElementById('nameAct').innerHTML = "Смена пользователя";
-					interval = 60000;
-					Links = 'http://disel.elcat.kg';
-					//ids = setTimeout(function(){w.src = Links;},interval);
-				}
-				if (numUsr==0){
-					enterToForum();
-					numUsr ++;
-				}
-			}
-			function stopper(ths){
-				if (ths.value == "Стоп") {
-					ths.value = "Продолжить";
-					clearTimeout(ids);
-				}else{
-					ths.value = "Стоп";
-					document.getElementById('nebo').src = "http://disel.elcat.kg";
+			
 				}
 			}
 		</script>
