@@ -1,0 +1,14 @@
+{
+  	"name": "Авто Ап Дизель Форум",
+  	"version": "1.0.0",
+  	"description": "Бот - Небоскребы",
+  	"main": "index.htm",
+ 	"author": "Goncharuk Eugeny",
+  	"window": {
+		 "title": "Авто Ап Дизель Форум",
+   		 "toolbar": true,
+   		 "icon": "icon.png",
+   		 "width": 1050,
+   		 "height": 650
+ 	 }
+} 
